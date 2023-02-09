@@ -14,4 +14,8 @@ public interface BookService {
     List<BookBasicDTO> getBooks();
 
     Optional<BookDTO> getBook(long id);
+
+    Optional<BookDTO> editBook(long id, BookCreateDTO bookCreate);
+
+    boolean deleteBook(long id);
 }

@@ -9,7 +9,6 @@ import com.guardiankiller.library.service.BookService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,6 +49,54 @@ public class BookServiceImpl implements BookService {
         return bookRepository
             .findById(id)
             .map(this::toDTO);
+    }
+
+    @Override
+    public Optional<BookDTO> editBook(long id, BookCreateDTO bookCreate) {
+        var opt = bookRepository.findById(id);
+        if(opt.isEmpty()) {
+            return Optional.empty();
+        }
+        var book = opt.get();
+
+        if(bookCreate.getAuthor() != null) {
+            book.setAuthor(bookCreate.getAuthor());
+        }
+
+        if(bookCreate.getDescription() != null) {
+            book.setDescription(bookCreate.getDescription());
+        }
+
+        if(bookCreate.getISBN() != null) {
+            book.setISBN(bookCreate.getISBN());
+        }
+
+        if(bookCreate.getTitle() != null) {
+            book.setTitle(bookCreate.getTitle());
+        }
+
+        if(bookCreate.getReleaseDate() != null) {
+            book.setReleaseDate(bookCreate.getReleaseDate());
+        }
+
+        if(bookCreate.getPublisher() != null) {
+            book.setPublisher(bookCreate.getPublisher());
+        }
+
+        bookRepository.save(book);
+
+        return Optional.of(toDTO(book));
+    }
+
+    @Override
+    public boolean deleteBook(long id) {
+        var opt = bookRepository.findById(id);
+        if(opt.isEmpty()) {
+            return false;
+        }
+        var book = opt.get();
+        bookRepository.delete(book);
+        return true;
     }
 
     private BookDTO toDTO(Book newBook) {
